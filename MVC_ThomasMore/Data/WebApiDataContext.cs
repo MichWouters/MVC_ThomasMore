@@ -18,7 +18,6 @@ namespace MVC_ThomasMore.Data
             SetTables(modelBuilder);
             SetRelationships(modelBuilder);
             GenerateDummyData(modelBuilder);
-
         }
 
         private void GenerateDummyData(ModelBuilder modelBuilder)
@@ -28,12 +27,14 @@ namespace MVC_ThomasMore.Data
                 new Categorie
                 {
                     Id = 1,
-                    Name = "Pc Software"
+                    Name = "Pc Software",
+                    DatumToegevoegd = DateTime.Now
                 },
                 new Categorie
                 {
                     Id = 2,
-                    Name = "Pc Hardware"
+                    Name = "Pc Hardware",
+                    DatumToegevoegd = DateTime.Now
                 });
 
             modelBuilder.Entity<Product>()
@@ -126,6 +127,13 @@ namespace MVC_ThomasMore.Data
                 .HasOne(x => x.Klant)
                 .WithMany(x => x.Bestellingen)
                 .HasForeignKey(x => x.KlantId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            modelBuilder.Entity<Categorie>()
+                .HasMany(x => x.Producten)
+                .WithOne(x => x.Categorie)
+                .HasForeignKey(x => x.CategorieId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 

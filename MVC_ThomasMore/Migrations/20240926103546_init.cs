@@ -8,11 +8,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MVC_ThomasMore.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DatumToegevoegd = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Jobs",
                 columns: table => new
@@ -60,11 +74,18 @@ namespace MVC_ThomasMore.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Naam = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Prijs = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    DatumToegevoegd = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DatumToegevoegd = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CategorieId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Producten", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Producten_Categories_CategorieId",
+                        column: x => x.CategorieId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -114,23 +135,33 @@ namespace MVC_ThomasMore.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "DatumToegevoegd", "Name" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 9, 26, 12, 35, 45, 943, DateTimeKind.Local).AddTicks(6945), "Pc Software" },
+                    { 2, new DateTime(2024, 9, 26, 12, 35, 45, 943, DateTimeKind.Local).AddTicks(6990), "Pc Hardware" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Klanten",
                 columns: new[] { "Id", "BankrekeningNummer", "Gemeente", "Huisnummer", "Naam", "PostCode", "Straat", "Voornaam" },
                 values: new object[] { 1, "123", "Antwerpen", 12, "Wouters", "3390", "Steenweg", "Michiel" });
 
             migrationBuilder.InsertData(
-                table: "Producten",
-                columns: new[] { "Id", "DatumToegevoegd", "Naam", "Prijs" },
-                values: new object[,]
-                {
-                    { 1, new DateTime(2024, 9, 26, 0, 0, 0, 0, DateTimeKind.Local), "Baldur's gate", 49.99m },
-                    { 2, new DateTime(2024, 9, 26, 0, 0, 0, 0, DateTimeKind.Local), "Hello Kitty, Island adventure", 69.99m }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Bestellingen",
                 columns: new[] { "Id", "KlantId" },
                 values: new object[] { 1, 1 });
+
+            migrationBuilder.InsertData(
+                table: "Producten",
+                columns: new[] { "Id", "CategorieId", "DatumToegevoegd", "Naam", "Prijs" },
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2024, 9, 26, 0, 0, 0, 0, DateTimeKind.Local), "Baldur's gate", 49.99m },
+                    { 2, 1, new DateTime(2024, 9, 26, 0, 0, 0, 0, DateTimeKind.Local), "Hello Kitty, Island adventure", 69.99m },
+                    { 3, 2, new DateTime(2024, 9, 26, 0, 0, 0, 0, DateTimeKind.Local), "Geforce RTX 4080", 699.99m }
+                });
 
             migrationBuilder.InsertData(
                 table: "Orderlijnen",
@@ -155,6 +186,11 @@ namespace MVC_ThomasMore.Migrations
                 name: "IX_Orderlijnen_ProductID",
                 table: "Orderlijnen",
                 column: "ProductID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Producten_CategorieId",
+                table: "Producten",
+                column: "CategorieId");
         }
 
         /// <inheritdoc />
@@ -174,6 +210,9 @@ namespace MVC_ThomasMore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Klanten");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
         }
     }
 }

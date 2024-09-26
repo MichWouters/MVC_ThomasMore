@@ -47,6 +47,40 @@ namespace MVC_ThomasMore.Migrations
                         });
                 });
 
+            modelBuilder.Entity("MVC_ThomasMore.Model.Categorie", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DatumToegevoegd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DatumToegevoegd = new DateTime(2024, 9, 26, 12, 35, 45, 943, DateTimeKind.Local).AddTicks(6945),
+                            Name = "Pc Software"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DatumToegevoegd = new DateTime(2024, 9, 26, 12, 35, 45, 943, DateTimeKind.Local).AddTicks(6990),
+                            Name = "Pc Hardware"
+                        });
+                });
+
             modelBuilder.Entity("MVC_ThomasMore.Model.Job", b =>
                 {
                     b.Property<int>("Id")
@@ -192,6 +226,9 @@ namespace MVC_ThomasMore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategorieId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DatumToegevoegd")
                         .HasColumnType("datetime2");
 
@@ -204,12 +241,15 @@ namespace MVC_ThomasMore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategorieId");
+
                     b.ToTable("Producten", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1,
+                            CategorieId = 1,
                             DatumToegevoegd = new DateTime(2024, 9, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             Naam = "Baldur's gate",
                             Prijs = 49.99m
@@ -217,9 +257,18 @@ namespace MVC_ThomasMore.Migrations
                         new
                         {
                             Id = 2,
+                            CategorieId = 1,
                             DatumToegevoegd = new DateTime(2024, 9, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             Naam = "Hello Kitty, Island adventure",
                             Prijs = 69.99m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategorieId = 2,
+                            DatumToegevoegd = new DateTime(2024, 9, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            Naam = "Geforce RTX 4080",
+                            Prijs = 699.99m
                         });
                 });
 
@@ -253,9 +302,25 @@ namespace MVC_ThomasMore.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("MVC_ThomasMore.Model.Product", b =>
+                {
+                    b.HasOne("MVC_ThomasMore.Model.Categorie", "Categorie")
+                        .WithMany("Producten")
+                        .HasForeignKey("CategorieId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Categorie");
+                });
+
             modelBuilder.Entity("MVC_ThomasMore.Model.Bestelling", b =>
                 {
                     b.Navigation("Orderlijnen");
+                });
+
+            modelBuilder.Entity("MVC_ThomasMore.Model.Categorie", b =>
+                {
+                    b.Navigation("Producten");
                 });
 
             modelBuilder.Entity("MVC_ThomasMore.Model.Klant", b =>

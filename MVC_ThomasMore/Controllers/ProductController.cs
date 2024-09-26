@@ -33,15 +33,15 @@ namespace MVC_ThomasMore.Controllers
         [Route("ProductenMetCategorie")]
         public ActionResult<ProductDTO[]> GetAllProductsWithCategories()
         {
-            Product[] producten = _dbContext.Producten
+            Product[] products = _dbContext.Producten
                 .Include(x => x.Categorie)
                 .ToArray();
 
-            List<ProductDTO> result = new List<ProductDTO>();
+            List<ProductDTO> dtos = new List<ProductDTO>();
 
-            foreach (Product product in producten)
+            foreach (Product product in products)
             {
-                result.Add(new ProductDTO
+                dtos.Add(new ProductDTO
                 {
                     Naam = product.Naam,
                     Prijs = product.Prijs,
@@ -49,7 +49,7 @@ namespace MVC_ThomasMore.Controllers
                 });
             }
 
-            return Ok(result);
+            return Ok(dtos);
         }
 
         [HttpGet]
@@ -82,18 +82,27 @@ namespace MVC_ThomasMore.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddProduct(Product product)
+        public ActionResult AddProduct(AddProductDTO dto)
         {
             // Defensive coding
             if (ModelState.IsValid)
             {
+                // Map dto naar model
+                Product product = new Product
+                {
+                    CategorieId = dto.CategorieId,
+                    DatumToegevoegd = DateTime.Now,
+                    Naam = dto.Naam,
+                    Prijs = dto.Prijs
+                };
+
                 // Query
                 _dbContext.Producten.Add(product);
 
                 // Execute command
                 _dbContext.SaveChanges();
 
-                return CreatedAtAction("AddProduct", null);
+                return CreatedAtAction(nameof(AddProduct), null);
             }
             else
             {
