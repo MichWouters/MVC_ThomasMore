@@ -19,14 +19,26 @@ namespace MVC_ThomasMore.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Product[]> GetAllProducts(string naam)
+        public ActionResult<ProductDTO[]> GetAllProducts(string naam)
         {
             Product[] producten = _dbContext
                 .Producten
                 .Where(x => x.Naam.Contains(naam))
                 .ToArray();
 
-            return Ok(producten);
+            List<ProductDTO> result = new List<ProductDTO>();
+
+            foreach (var product in producten)
+            {
+                result.Add(new ProductDTO
+                {
+                    Prijs = product.Prijs,
+                    Naam = product.Naam,
+                    Categorie = product.Categorie.Name,
+                });
+            }
+
+            return Ok(result);
         }
 
         [HttpGet]
@@ -54,15 +66,28 @@ namespace MVC_ThomasMore.Controllers
 
         [HttpGet]
         [Route("TopThree")]
-        public ActionResult<Product[]> GetTopThreeProducts()
+        public ActionResult<ProductDTO[]> GetTopThreeProducts()
         {
             Product[] producten = _dbContext
                 .Producten
+                .Include (x => x.Categorie)
                 .OrderByDescending(x => x.Prijs)
                 .Take(3)
                 .ToArray();
 
-            return Ok(producten);
+            List<ProductDTO> result = new List<ProductDTO>();
+
+            foreach (var product in producten)
+            {
+                result.Add(new ProductDTO
+                {
+                    Prijs = product.Prijs,
+                    Naam = product.Naam,
+                    Categorie = product.Categorie.Name,
+                });
+            }
+
+            return Ok(result);
         }
 
         [HttpGet("id")]
@@ -70,7 +95,14 @@ namespace MVC_ThomasMore.Controllers
         {
             Product product = _dbContext.Producten.Find(id);
 
-            if (product != null)
+            ProductDTO result = new ProductDTO()
+            {
+                Naam = product.Naam,
+                Prijs = product.Prijs,
+                Categorie = product.Categorie.Name,
+            };
+
+            if (result != null)
             {
                 return Ok(product);
             }
