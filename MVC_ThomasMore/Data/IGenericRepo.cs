@@ -6,9 +6,9 @@ namespace MVC_ThomasMore.Data
     {
         Task AddItemAsync(T item);
 
-        Task UpdateItemAsync(int id, T item);
+        Task UpdateItemAsync(T item);
 
-        Task DeleteItemAsync(int id);
+        Task DeleteItemAsync(T item);
 
         Task<T> GetItemAsync(int id);
 

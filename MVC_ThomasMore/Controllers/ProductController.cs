@@ -20,7 +20,7 @@ namespace MVC_ThomasMore.Controllers
         [HttpGet]
         public async Task<ActionResult<ProductDTO[]>> GetAllProductsAsync()
         {
-            List<Product> producten = await _repo.GetAllProductsWithCategoriesAsync();
+            List<Product> producten = await _repo.GetAllAsync();
 
             List<ProductDTO> result = new List<ProductDTO>();
 
@@ -30,7 +30,6 @@ namespace MVC_ThomasMore.Controllers
                 {
                     Prijs = product.Prijs,
                     Naam = product.Naam,
-                    Categorie = product.Categorie.Name,
                 });
             }
 
@@ -41,7 +40,7 @@ namespace MVC_ThomasMore.Controllers
         [Route("ProductenMetCategorie")]
         public async Task<ActionResult<ProductDTO[]>> GetAllProductsWithCategoriesAsync()
         {
-            List<Product> producten = await _repo.GetAllAsync();
+            List<Product> producten = await _repo.GetAllProductsWithCategoriesAsync();
 
             List<ProductDTO> dtos = new List<ProductDTO>();
 
@@ -58,122 +57,109 @@ namespace MVC_ThomasMore.Controllers
             return Ok(dtos);
         }
 
-        //[HttpGet]
-        //[Route("TopThree")]
-        //public ActionResult<ProductDTO[]> GetTopThreeProducts()
-        //{
-        //    Product[] producten = _dbContext
-        //        .Producten
-        //        .Include (x => x.Categorie)
-        //        .OrderByDescending(x => x.Prijs)
-        //        .Take(3)
-        //        .ToArray();
+        [HttpGet]
+        [Route("TopThree")]
+        public async Task<ActionResult<ProductDTO[]>> GetTopThreeProducts()
+        {
+            List<Product> producten = await _repo.GetTopXMostExpensiveProducts();
+            List<ProductDTO> result = new List<ProductDTO>();
 
-        //    List<ProductDTO> result = new List<ProductDTO>();
+            foreach (var product in producten)
+            {
+                result.Add(new ProductDTO
+                {
+                    Prijs = product.Prijs,
+                    Naam = product.Naam,
+                    Categorie = product.Categorie.Name,
+                });
+            }
 
-        //    foreach (var product in producten)
-        //    {
-        //        result.Add(new ProductDTO
-        //        {
-        //            Prijs = product.Prijs,
-        //            Naam = product.Naam,
-        //            Categorie = product.Categorie.Name,
-        //        });
-        //    }
+            return Ok(result);
+        }
 
-        //    return Ok(result);
-        //}
+        [HttpGet("id")]
+        public async Task<ActionResult<ProductDTO[]>> GetProductAsync(int id)
+        {
+            Product product = await _repo.GetProductWithCategory(id);
 
-        //[HttpGet("id")]
-        //public ActionResult<Product[]> GetProduct(int id)
-        //{
-        //    Product product = _dbContext.Producten.Find(id);
+            ProductDTO result = new ProductDTO()
+            {
+                Naam = product.Naam,
+                Prijs = product.Prijs,
+                Categorie = product.Categorie.Name,
+            };
 
-        //    ProductDTO result = new ProductDTO()
-        //    {
-        //        Naam = product.Naam,
-        //        Prijs = product.Prijs,
-        //        Categorie = product.Categorie.Name,
-        //    };
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
 
-        //    if (result != null)
-        //    {
-        //        return Ok(product);
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
+        }
 
-        //}
+        [HttpPost]
+        public async Task<ActionResult> AddProduct(AddProductDTO dto)
+        {
+            // Defensive coding
+            if (ModelState.IsValid)
+            {
+                // Map dto naar model
+                Product product = new Product
+                {
+                    CategorieId = dto.CategorieId,
+                    DatumToegevoegd = DateTime.Now,
+                    Naam = dto.Naam,
+                    Prijs = dto.Prijs
+                };
 
-        //[HttpPost]
-        //public ActionResult AddProduct(AddProductDTO dto)
-        //{
-        //    // Defensive coding
-        //    if (ModelState.IsValid)
-        //    {
-        //        // Map dto naar model
-        //        Product product = new Product
-        //        {
-        //            CategorieId = dto.CategorieId,
-        //            DatumToegevoegd = DateTime.Now,
-        //            Naam = dto.Naam,
-        //            Prijs = dto.Prijs
-        //        };
+                await _repo.AddItemAsync(product);
 
-        //        // Query
-        //        _dbContext.Producten.Add(product);
+                return CreatedAtAction(nameof(AddProduct), null);
+            }
+            else
+            {
+                // Data annotaties waren ongeldig
+                return BadRequest(ModelState);
+            }
+        }
 
-        //        // Execute command
-        //        _dbContext.SaveChanges();
+        [HttpPut]
+        public async Task<ActionResult> UpdateProduct(int id, UpdateProductDTO updatedProduct) // TODO: DTO
+        {
+            // Defensive coding
+            Product product = await _repo.GetItemAsync(id);
 
-        //        return CreatedAtAction(nameof(AddProduct), null);
-        //    }
-        //    else
-        //    {
-        //        // Data annotaties waren ongeldig
-        //        return BadRequest(ModelState);
-        //    }
-        //}
+            if (product == null)
+            {
+                return NotFound("Product bestaat niet!");
+            }
 
-        //[HttpPut]
-        //public ActionResult UpdateP(int id, Product updatedProduct)
-        //{
-        //    // Defensive coding
-        //    Product product = _dbContext.Producten.Find(id);
+            // Mapping
+            product.Naam = updatedProduct.Naam;
+            product.Prijs = updatedProduct.Prijs;
 
-        //    if (product == null)
-        //    {
-        //        return NotFound("Product bestaat niet!");
-        //    }
+            await _repo.UpdateItemAsync(product);
 
-        //    // Mapping
-        //    product.Naam = updatedProduct.Naam;
-        //    product.Prijs = updatedProduct.Prijs;
-        //    product.DatumToegevoegd = updatedProduct.DatumToegevoegd;
+            return CreatedAtAction(nameof(UpdateProduct), null); // Gebruik nameof voor de naam van een methode of variabele in string formaat te krijgen.
+        }
 
-        //    _dbContext.Producten.Update(product);
-        //    _dbContext.SaveChanges();
+        [HttpDelete]
+        public async Task<ActionResult> DeleteProduct(int id)
+        {
+            // Defensive coding
+            Product product = await _repo.GetItemAsync(id);
 
-        //    return CreatedAtAction(nameof(UpdateP), null); // Gebruik nameof voor de naam van een methode of variabele in string formaat te krijgen.
-        //}
+            if (product == null)
+            {
+                return NotFound("Product bestaat niet!");
+            }
 
-        //[HttpDelete]
-        //public ActionResult DeleteProduct(int id)
-        //{
-        //    // Defensive coding
-        //    Product product = _dbContext.Producten.Find(id);
+            await _repo.DeleteItemAsync(product);
 
-        //    if (product == null)
-        //    {
-        //        return NotFound("Product bestaat niet!");
-        //    }
-
-        //    _dbContext.Producten.Remove(product);
-        //    _dbContext.SaveChanges();
-
-        //    return Ok("Product is verwijderd");
-        //}
+            return Ok("Product is verwijderd");
+        }
     }
 }

@@ -3,7 +3,7 @@ using MVC_ThomasMore.Model;
 
 namespace MVC_ThomasMore.Data
 {
-    public class ProductRepository :IProductRepo
+    public class ProductRepository : IProductRepo
     {
         private WebApiDataContext _dbContext;
 
@@ -18,16 +18,8 @@ namespace MVC_ThomasMore.Data
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateItemAsync(int id, Product item)
+        public async Task DeleteItemAsync(Product product)
         {
-            _dbContext.Producten.Update(item);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task DeleteItemAsync(int id)
-        {
-            Product product = new Product { Id = id };
-
             _dbContext.Producten.Remove(product);
             await _dbContext.SaveChangesAsync();
         }
@@ -47,6 +39,29 @@ namespace MVC_ThomasMore.Data
         public async Task<Product> GetItemAsync(int id)
         {
             return await _dbContext.Producten.FindAsync(id);
+        }
+
+        public async Task<Product> GetProductWithCategory(int id)
+        {
+            return await _dbContext.Producten
+                .Include(x => x.Categorie)
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Product>> GetTopXMostExpensiveProducts(int amount = 3)
+        {
+            return await _dbContext.Producten
+                .Include(x => x.Categorie)
+                .OrderByDescending(x => x.Prijs)
+                .Take(amount)
+                .ToListAsync();
+        }
+
+        public async Task UpdateItemAsync(Product item)
+        {
+            _dbContext.Producten.Update(item);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
