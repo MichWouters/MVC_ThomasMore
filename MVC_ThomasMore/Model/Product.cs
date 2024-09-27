@@ -2,7 +2,7 @@
 
 namespace MVC_ThomasMore.Model
 {
-    public class Product
+    public class Product : IModel
     {
         public int Id { get; set; }
 
@@ -20,5 +20,6 @@ namespace MVC_ThomasMore.Model
 
         public int CategorieId { get; set; }
         public Categorie Categorie { get; set; }
+
     }
 }

@@ -2,7 +2,7 @@
 
 namespace MVC_ThomasMore.Model
 {
-    public class Klant
+    public class Klant : IModel
     {
         public int Id { get; set; }
 

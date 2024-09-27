@@ -1,6 +1,6 @@
 ﻿namespace MVC_ThomasMore.Model
 {
-    public class Bestelling
+    public class Bestelling: IModel
     {
         public int Id { get; set; }
 

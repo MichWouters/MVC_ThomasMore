@@ -1,6 +1,6 @@
 ﻿namespace MVC_ThomasMore.Model
 {
-    public class Orderlijn
+    public class Orderlijn : IModel
     {
         // Dit is een associatie tabel
         // Bevat 2 Foreign keys naar andere tabellen -> Eg: 2 Een op veel maakt een veel op veel

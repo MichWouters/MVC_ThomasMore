@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MVC_ThomasMore.Data;
+using MVC_ThomasMore.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add services here
+builder.Services.AddScoped<IProductRepo, ProductRepository>();
 
 // Use Entity Framework
 builder.Services.AddDbContext<WebApiDataContext>(options => 

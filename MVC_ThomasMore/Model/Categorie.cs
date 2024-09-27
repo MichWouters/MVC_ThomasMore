@@ -1,6 +1,6 @@
 ﻿namespace MVC_ThomasMore.Model
 {
-    public class Categorie
+    public class Categorie : IModel
     {
         public int Id { get; set; }
 

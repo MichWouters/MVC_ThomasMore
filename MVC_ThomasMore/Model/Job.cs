@@ -1,6 +1,6 @@
 ﻿namespace MVC_ThomasMore.Model
 {
-    public class Job
+    public class Job : IModel
     {
         public int Id { get; set; }
 
