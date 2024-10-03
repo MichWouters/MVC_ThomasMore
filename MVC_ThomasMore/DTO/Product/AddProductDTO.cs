@@ -7,7 +7,5 @@
         public double Prijs { get; set; }
 
         public string Naam { get; set; }
-
-
     }
 }

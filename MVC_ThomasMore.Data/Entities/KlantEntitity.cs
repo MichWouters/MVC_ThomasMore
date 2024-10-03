@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MVC_ThomasMore.Model
+namespace MVC_ThomasMore.Data.Entities
 {
-    public class Klant : IModel
+    public class KlantEntitity: IEntity
     {
         public int Id { get; set; }
 
@@ -25,6 +25,6 @@ namespace MVC_ThomasMore.Model
         public string BankrekeningNummer { get; set; }
 
         // Navigation Properties
-        public List<Bestelling> Bestellingen { get; set; } = new List<Bestelling>();
+        public List<BestellingEntity> Bestellingen { get; set; } = new List<BestellingEntity>();
     }
 }

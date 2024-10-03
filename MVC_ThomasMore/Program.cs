@@ -1,6 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using MVC_ThomasMore.Data;
-using MVC_ThomasMore.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +13,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IProductRepo, ProductRepository>();
 
 // Use Entity Framework
-builder.Services.AddDbContext<WebApiDataContext>(options => 
+builder.Services.AddDbContext<WebApiDataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDBConnection")));
 
 var app = builder.Build();

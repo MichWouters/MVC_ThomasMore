@@ -1,6 +1,6 @@
-﻿namespace MVC_ThomasMore.Model
+﻿namespace MVC_ThomasMore.Data.Entities
 {
-    public class Categorie : IModel
+    public class CategorieEntity: IEntity
     {
         public int Id { get; set; }
 
@@ -9,6 +9,6 @@
         public DateTime DatumToegevoegd { get; set; }
 
         // Navigation Properties
-        public List<Product> Producten { get; set; }
+        public List<ProductEntity> Producten { get; set; }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace MVC_ThomasMore.Model
+﻿namespace MVC_ThomasMore.Data.Entities
 {
-    public class Orderlijn : IModel
+    public class OrderLijnEntity: IEntity
     {
         // Dit is een associatie tabel
         // Bevat 2 Foreign keys naar andere tabellen -> Eg: 2 Een op veel maakt een veel op veel
@@ -13,8 +13,8 @@
         public int Aantal { get; set; }
 
         // Navigation Properties
-        public Bestelling Bestelling { get; set; }
+        public BestellingEntity Bestelling { get; set; }
 
-        public Product Product { get; set; }
+        public ProductEntity Product { get; set; }
     }
 }

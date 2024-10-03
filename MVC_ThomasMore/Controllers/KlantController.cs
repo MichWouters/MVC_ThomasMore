@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MVC_ThomasMore.Data;
 using MVC_ThomasMore.DTO.Klant;
 using MVC_ThomasMore.DTO.Product;
 using MVC_ThomasMore.Model;
@@ -19,7 +17,6 @@ namespace MVC_ThomasMore.Controllers
             _dbContext = dbContext;
         }
 
-
         [HttpGet]
         public ActionResult<KlantDTO> GetKlant(int id)
         {
@@ -34,7 +31,6 @@ namespace MVC_ThomasMore.Controllers
                 .ThenInclude(y => y.Orderlijnen)
                 .ThenInclude(z => z.Product)
                 .FirstOrDefault();
-
 
             List<Product> products = _dbContext.Producten.ToList();
             List<ProductDTO> productDtos = new List<ProductDTO>();
@@ -62,7 +58,6 @@ namespace MVC_ThomasMore.Controllers
             {
                 return Ok(dto);
             }
-
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MVC_ThomasMore.Data;
 using MVC_ThomasMore.DTO.Product;
 using MVC_ThomasMore.Model;
 
@@ -97,7 +95,6 @@ namespace MVC_ThomasMore.Controllers
             {
                 return NotFound();
             }
-
         }
 
         [HttpPost]

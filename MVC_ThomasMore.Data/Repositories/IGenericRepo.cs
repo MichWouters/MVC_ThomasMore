@@ -1,8 +1,8 @@
-﻿using MVC_ThomasMore.Model;
+﻿using MVC_ThomasMore.Data.Entities;
 
-namespace MVC_ThomasMore.Data
+namespace MVC_ThomasMore.Data.Repositories
 {
-    public interface IGenericRepo<T> where T: IModel
+    public interface IGenericRepo<T> where T : IEntity
     {
         Task AddItemAsync(T item);
 
@@ -13,7 +13,5 @@ namespace MVC_ThomasMore.Data
         Task<T> GetItemAsync(int id);
 
         Task<List<T>> GetAllAsync();
-
-        
     }
 }

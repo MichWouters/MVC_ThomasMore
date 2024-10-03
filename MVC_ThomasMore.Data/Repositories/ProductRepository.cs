@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MVC_ThomasMore.Model;
+using MVC_ThomasMore.Data.Entities;
 
-namespace MVC_ThomasMore.Data
+namespace MVC_ThomasMore.Data.Repositories
 {
     public class ProductRepository : IProductRepo
     {
@@ -12,36 +12,36 @@ namespace MVC_ThomasMore.Data
             _dbContext = dbContext;
         }
 
-        public async Task AddItemAsync(Product item)
+        public async Task AddItemAsync(ProductEntity item)
         {
             await _dbContext.Producten.AddAsync(item);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteItemAsync(Product product)
+        public async Task DeleteItemAsync(ProductEntity product)
         {
             _dbContext.Producten.Remove(product);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Product>> GetAllAsync()
+        public async Task<List<ProductEntity>> GetAllAsync()
         {
             return await _dbContext.Producten.ToListAsync();
         }
 
-        public async Task<List<Product>> GetAllProductsWithCategoriesAsync()
+        public async Task<List<ProductEntity>> GetAllProductsWithCategoriesAsync()
         {
             return await _dbContext.Producten
                 .Include(x => x.Categorie)
                 .ToListAsync();
         }
 
-        public async Task<Product> GetItemAsync(int id)
+        public async Task<ProductEntity> GetItemAsync(int id)
         {
             return await _dbContext.Producten.FindAsync(id);
         }
 
-        public async Task<Product> GetProductWithCategory(int id)
+        public async Task<ProductEntity> GetProductWithCategory(int id)
         {
             return await _dbContext.Producten
                 .Include(x => x.Categorie)
@@ -49,7 +49,7 @@ namespace MVC_ThomasMore.Data
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<Product>> GetTopXMostExpensiveProducts(int amount = 3)
+        public async Task<List<ProductEntity>> GetTopXMostExpensiveProducts(int amount = 3)
         {
             return await _dbContext.Producten
                 .Include(x => x.Categorie)
@@ -58,7 +58,7 @@ namespace MVC_ThomasMore.Data
                 .ToListAsync();
         }
 
-        public async Task UpdateItemAsync(Product item)
+        public async Task UpdateItemAsync(ProductEntity item)
         {
             _dbContext.Producten.Update(item);
             await _dbContext.SaveChangesAsync();
