@@ -1,8 +1,11 @@
 ﻿using MVC_ThomasMore.Services;
 
-
 namespace MVC_ThomasMore.Testing
 {
+    /*Een unit test is een methodie controleert of
+     * het resultaat van een methode(idealiter in een business layer)
+     */
+
     internal class KortingTests
     {
         [Test]
@@ -36,8 +39,5 @@ namespace MVC_ThomasMore.Testing
             // Assert
             Assert.That(resultaat, Is.EqualTo(verwachtResultaat));
         }
-
-
-
     }
 }

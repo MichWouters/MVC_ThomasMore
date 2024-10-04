@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using MVC_ThomasMore.Data;
 using MVC_ThomasMore.Data.Repositories;
 
+// In deze klasse komt alle configuratie van de app
+// Zaken zoals registren van dependencies (database, services, automapper...) doen we hier
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,7 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add services here
+// Add services here -> Dependency Injection
 builder.Services.AddScoped<IProductRepo, ProductRepository>();
 
 

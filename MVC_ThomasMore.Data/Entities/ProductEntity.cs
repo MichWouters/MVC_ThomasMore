@@ -2,11 +2,17 @@
 
 namespace MVC_ThomasMore.Data.Entities
 {
-    public class ProductEntity: IEntity
+    /* Een entiteit is een 1-1 code weergave van een database tabel
+     * Deze mag dus enkel in speciale gevallen aangepast worden,
+     * anders is een DB update nodig
+     */
+
+    public class ProductEntity : IEntity
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Naam is verplicht")]
+        // We gebruiken Data Annotations om de tabel structuur op te stellen
+        [Required(ErrorMessage = "Naam is verplicht")] 
         [MinLength(3)]
         public string Naam { get; set; }
 

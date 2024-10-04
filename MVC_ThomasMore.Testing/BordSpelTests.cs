@@ -1,9 +1,4 @@
 ﻿using MVC_ThomasMore.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MVC_ThomasMore.Testing
 {
@@ -20,10 +15,10 @@ namespace MVC_ThomasMore.Testing
             Speler speler = new Speler();
 
             // Act
-            int positie = speler.VerplaatsSpeler(aantalOgen);
+            speler.VerplaatsSpeler(aantalOgen);
 
             // Assert
-            Assert.AreEqual(4, speler.Positie);
+            Assert.That(speler.Positie, Is.EqualTo(4));
         }
 
         [Test]
@@ -34,10 +29,10 @@ namespace MVC_ThomasMore.Testing
             Speler speler = new Speler();
 
             // Act
-            int positie = speler.VerplaatsSpeler(aantalOgen);
+            speler.VerplaatsSpeler(aantalOgen);
 
             // Assert
-            Assert.AreEqual(6, speler.Positie);
+            Assert.That(speler.Positie, Is.EqualTo(6));
         }
 
         [Ignore("Not ready yet")]

@@ -3,6 +3,8 @@ using MVC_ThomasMore.Data.Entities;
 
 namespace MVC_ThomasMore.Data.Repositories
 {
+    // Een repository wordt gebruikt om communicatie met de DB te verrichten
+    // We gebruiken enkel Entities (Data layer) om data op te halen en weg te schrijven
     public class ProductRepository : IProductRepo
     {
         private WebApiDataContext _dbContext;

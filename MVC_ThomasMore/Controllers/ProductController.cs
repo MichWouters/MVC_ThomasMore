@@ -46,26 +46,18 @@ namespace MVC_ThomasMore.Controllers
             return Ok(result);
         }
 
-        //[HttpGet]
-        //[Route("ProductenMetCategorie")]
-        //public async Task<ActionResult<ProductDTO[]>> GetAllProductsWithCategoriesAsync()
-        //{
-        //    List<Product> producten = await _repo.GetAllProductsWithCategoriesAsync();
+        [HttpGet]
+        [Route("ProductenMetCategorie")]
+        public async Task<ActionResult<ProductDTO[]>> GetAllProductsWithCategoriesAsync()
+        {
+            List<ProductEntity> entities = await _repo.GetAllProductsWithCategoriesAsync();
 
-        //    List<ProductDTO> dtos = new List<ProductDTO>();
+            List<Product> models = _mapper.Map<List<Product>>(entities);
 
-        //    foreach (Product product in producten)
-        //    {
-        //        dtos.Add(new ProductDTO
-        //        {
-        //            Naam = product.ProductNaam,
-        //            Prijs = product.Prijs,
-        //            Categorie = product.Categorie.Name
-        //        });
-        //    }
+            List<ProductDTO> dtos = _mapper.Map<List<ProductDTO>>(models);
 
-        //    return Ok(dtos);
-        //}
+            return Ok(dtos);
+        }
 
         //[HttpGet]
         //[Route("TopThree")]

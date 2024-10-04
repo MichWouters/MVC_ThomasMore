@@ -2,7 +2,7 @@
 
 namespace MVC_ThomasMore.Data.Entities
 {
-    public class KlantEntitity: IEntity
+    public class KlantEntitity : IEntity
     {
         public int Id { get; set; }
 

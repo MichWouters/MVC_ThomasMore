@@ -13,6 +13,8 @@ namespace MVC_ThomasMore.Configuration
                 .ForMember(dest => dest.ProductNaam, x => x.MapFrom(src => src.Naam))
                 .ReverseMap();
 
+            CreateMap<Product, ProductDTO>();
+
             CreateMap<AddProductDTO, Product>();
         }
     }

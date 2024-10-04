@@ -1,7 +1,6 @@
-﻿
-
-namespace MVC_ThomasMore.Model
+﻿namespace MVC_ThomasMore.Model
 {
+    // Deze klasse wordt enkel gebruikt om een unit test te simuleren.
     public class Speler
     {
         public int Positie { get; set; }
