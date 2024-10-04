@@ -6,19 +6,19 @@ namespace MVC_ThomasMore.Model
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Naam is verplicht")]
-        [MinLength(3, ErrorMessage = "Naam moet uit minstens 3 tekens bestaan")]
-        public string Naam { get; set; }
+        public string ProductNaam { get; set; }
 
-        [Range(10, 100, ErrorMessage = "Prijs moet tussen 10 en 100 liggen")]
         public double Prijs { get; set; }
 
-        public DateTime DatumToegevoegd { get; set; }
+        public double PrijsInDollar => Prijs * 0.9;
 
-        // Navigation Properties
+        public double PrijsInPond => Prijs * 1.1;
+
         public List<Orderlijn> OrderLijnen { get; set; } = new List<Orderlijn>();
 
         public int CategorieId { get; set; }
+
         public Categorie Categorie { get; set; }
+
     }
 }

@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using MVC_ThomasMore.Data;
+using MVC_ThomasMore.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,10 @@ builder.Services.AddSwaggerGen();
 
 // Add services here
 builder.Services.AddScoped<IProductRepo, ProductRepository>();
+
+
+// Add automapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Use Entity Framework
 builder.Services.AddDbContext<WebApiDataContext>(options =>

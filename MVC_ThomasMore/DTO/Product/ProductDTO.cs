@@ -6,6 +6,10 @@
 
         public double Prijs { get; set; }
 
+        public double PrijsInDollar { get; set; }
+
+        public double PrijsInPond { get; set; }
+
         public string Categorie { get; set; }
     }
 }
