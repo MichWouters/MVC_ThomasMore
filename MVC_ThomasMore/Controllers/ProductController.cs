@@ -11,7 +11,7 @@ namespace MVC_ThomasMore.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize] // Gebruiker moet ingelogd zijn
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private IProductRepo _repo;
@@ -26,6 +26,7 @@ namespace MVC_ThomasMore.Controllers
         }
 
         [HttpGet("id")]
+        [Authorize]
         public async Task<ActionResult<ProductDTO[]>> GetProductAsync(int id)
         {
             Product model = await _service.GetProductAsync(id);
@@ -68,6 +69,7 @@ namespace MVC_ThomasMore.Controllers
 
         [HttpGet]
         [Route("ProductenMetCategorie")]
+        [Authorize(Roles = "admin")] // Enkel gebruiker met admin rol mogen dit aanpassen
         public async Task<ActionResult<ProductDTO[]>> GetAllProductsWithCategoriesAsync()
         {
             List<ProductEntity> entities = await _repo.GetAllProductsWithCategoriesAsync();

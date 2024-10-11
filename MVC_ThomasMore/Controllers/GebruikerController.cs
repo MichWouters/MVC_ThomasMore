@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.JsonWebTokens;
 using MVC_ThomasMore.Data.Entities;
 using MVC_ThomasMore.DTO.Gebruiker;
+using MVC_ThomasMore.Helper;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -57,24 +58,29 @@ namespace MVC_ThomasMore.Controllers
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email),
-                    //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
                 // Add roles like admin, super admin. What authority do I have?
-                IList<string> userRoles = await _userManager.GetRolesAsync(user);
+                //IList<string> userRoles = await _userManager.GetRolesAsync(user);
+
+                IList<string> userRoles = new List<string>
+                {
+                    "user", "admin"
+                };
+
                 foreach (var role in userRoles)
                 {
                     claims.Add(new Claim(ClaimTypes.Role, role));
                 }
 
-                throw new NotImplementedException();
-                //var token = Token.GetToken(claims);
+                var token = Token.GetToken(claims);
 
-                //return Ok(new
-                //{
-                //    token = new JwtSecurityTokenHandler().WriteToken(token),
-                //    expiration = token.ValidTo
-                //});
+                return Ok(new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                    expiration = token.ValidTo
+                });
             }
             else
             {
@@ -109,6 +115,7 @@ namespace MVC_ThomasMore.Controllers
                 PhoneNumberConfirmed = true,
                 EmailConfirmed = true,
                 TwoFactorEnabled = false,
+                PasswordHash = "123",
             };
 
             IdentityResult result = await _userManager.CreateAsync(newUser, dto.Password);
