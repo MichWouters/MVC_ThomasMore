@@ -1,26 +1,46 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVC_ThomasMore.Data.Entities;
 using MVC_ThomasMore.Data.Repositories;
 using MVC_ThomasMore.DTO.Product;
 using MVC_ThomasMore.Model;
+using MVC_ThomasMore.Services;
 
 namespace MVC_ThomasMore.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize] // Gebruiker moet ingelogd zijn
     public class ProductController : ControllerBase
     {
         private IProductRepo _repo;
+        private IProductService _service;
         private IMapper _mapper;
 
-        public ProductController(IProductRepo repo, IMapper mapper)
+        public ProductController(IProductService service, IMapper mapper, IProductRepo repo)
         {
-            _repo = repo;
+            _service = service;
             _mapper = mapper;
+            _repo = repo;
+        }
+
+        [HttpGet("id")]
+        public async Task<ActionResult<ProductDTO[]>> GetProductAsync(int id)
+        {
+            Product model = await _service.GetProductAsync(id);
+
+            ProductDTO result = _mapper.Map<ProductDTO>(model);
+
+            if (result != null)
+                return Ok(result);
+            else
+                return NotFound();
+
         }
 
         [HttpGet]
+        [AllowAnonymous] // Deze methode vereist geen login
         public async Task<ActionResult<ProductDTO[]>> GetAllProductsAsync()
         {
             // Haal DB data op
@@ -79,27 +99,7 @@ namespace MVC_ThomasMore.Controllers
         //    return Ok(result);
         //}
 
-        //[HttpGet("id")]
-        //public async Task<ActionResult<ProductDTO[]>> GetProductAsync(int id)
-        //{
-        //    Product product = await _repo.GetProductWithCategory(id);
 
-        //    ProductDTO result = new ProductDTO()
-        //    {
-        //        Naam = product.ProductNaam,
-        //        Prijs = product.Prijs,
-        //        Categorie = product.Categorie.Name,
-        //    };
-
-        //    if (result != null)
-        //    {
-        //        return Ok(result);
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
-        //}
 
         //[HttpPost]
         //public async Task<ActionResult> AddProduct(AddProductDTO dto)

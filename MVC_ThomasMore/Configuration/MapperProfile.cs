@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MVC_ThomasMore.Data.Entities;
+using MVC_ThomasMore.DTO.Gebruiker;
 using MVC_ThomasMore.DTO.Product;
 using MVC_ThomasMore.Model;
 
@@ -15,7 +16,12 @@ namespace MVC_ThomasMore.Configuration
 
             CreateMap<Product, ProductDTO>();
 
+            CreateMap<CategorieEntity, Categorie>()
+                .ReverseMap();
+
             CreateMap<AddProductDTO, Product>();
+
+            //CreateMap<RegistratieDTO, CustomUser>();
         }
     }
 }

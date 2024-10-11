@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MVC_ThomasMore.Data.Entities;
 
 namespace MVC_ThomasMore.Data
 {
-    public class WebApiDataContext : DbContext
+    public class WebApiDataContext : IdentityDbContext<CustomUser>
     {
         public WebApiDataContext(DbContextOptions<WebApiDataContext> options) : base(options)
         {
@@ -21,10 +22,25 @@ namespace MVC_ThomasMore.Data
             base.OnModelCreating(modelBuilder);
             SetTables(modelBuilder);
             SetRelationships(modelBuilder);
-            GenerateDummyData(modelBuilder);
+            SeedDummyData(modelBuilder);
+            SeedUser(modelBuilder);
         }
 
-        private void GenerateDummyData(ModelBuilder modelBuilder)
+        private void SeedUser(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CustomUser>().HasData(
+
+                new CustomUser
+                {
+                    Email = "michiel@thomasMore.be",
+                    Adres = "Steenweg",
+                    Naam = "Michiel",
+                    UserName = "Michiel",
+                    TwoFactorEnabled = false,
+                });
+        }
+
+        private void SeedDummyData(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CategorieEntity>()
                 .HasData(

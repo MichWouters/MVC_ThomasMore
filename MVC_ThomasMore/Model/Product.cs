@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace MVC_ThomasMore.Model
+﻿namespace MVC_ThomasMore.Model
 {
     public class Product : IModel
     {
@@ -10,9 +8,11 @@ namespace MVC_ThomasMore.Model
 
         public double Prijs { get; set; }
 
-        public double PrijsInDollar => Prijs * 0.9;
+        public double TotaalPrijs { get; set; }
 
-        public double PrijsInPond => Prijs * 1.1;
+        public double PrijsInDollar => Math.Round(Prijs * 0.9, 2);
+
+        public double PrijsInPond => Math.Round(Prijs * 1.1, 2);
 
         public List<Orderlijn> OrderLijnen { get; set; } = new List<Orderlijn>();
 

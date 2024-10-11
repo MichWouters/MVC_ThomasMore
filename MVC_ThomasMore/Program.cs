@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MVC_ThomasMore.Data;
+using MVC_ThomasMore.Data.Entities;
 using MVC_ThomasMore.Data.Repositories;
 
 // In deze klasse komt alle configuratie van de app
@@ -25,6 +28,28 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<WebApiDataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDBConnection")));
 
+// Use Identity Framework
+builder.Services.AddIdentity<CustomUser, IdentityRole>().
+    AddEntityFrameworkStores<WebApiDataContext>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Events.OnRedirectToLogin = context =>
+        {
+            context.Response.StatusCode = 401; // Unauthorized
+            context.Response.ContentType = "application/json";
+
+            return context.Response.WriteAsync("Error: Niet gauthenticeerd");
+        };
+    });
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequiredLength = 6;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(300);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -36,6 +61,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
