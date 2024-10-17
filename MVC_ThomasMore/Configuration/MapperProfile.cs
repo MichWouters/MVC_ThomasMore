@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MVC_ThomasMore.Data.Entities;
-using MVC_ThomasMore.DTO.Gebruiker;
 using MVC_ThomasMore.DTO.Product;
 using MVC_ThomasMore.Model;
 
@@ -14,7 +13,8 @@ namespace MVC_ThomasMore.Configuration
                 .ForMember(dest => dest.ProductNaam, x => x.MapFrom(src => src.Naam))
                 .ReverseMap();
 
-            CreateMap<Product, ProductDTO>();
+            CreateMap<Product, ProductDTO>()
+                .ForMember(x => x.Categorie, y => y.MapFrom(z => z.Categorie.Name ?? "Onbekend"));
 
             CreateMap<CategorieEntity, Categorie>()
                 .ReverseMap();

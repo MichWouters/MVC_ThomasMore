@@ -23,7 +23,14 @@ namespace MVC_ThomasMore.Services
             Product model = _mapper.Map<Product>(entity);
 
             // We voeren berekeningen ENKEL op het Model uit
-            model.TotaalPrijs = model.Prijs + 15;
+            if (model.Prijs >= 100)
+            {
+                model.TotaalPrijs = model.Prijs;
+            }
+            else
+            {
+                model.TotaalPrijs = model.Prijs + 15;
+            }
 
             return model;
         }
